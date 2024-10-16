@@ -1,0 +1,285 @@
+basePath: /
+definitions:
+  movieservice.AddMovieReq:
+    properties:
+      age_limit:
+        type: integer
+      background_image_url:
+        type: string
+      bio:
+        type: string
+      genres:
+        items:
+          $ref: '#/definitions/movieservice.Genres'
+        type: array
+      language:
+        type: string
+      movie_name:
+        type: string
+      movie_url:
+        type: string
+      season:
+        type: integer
+      studio:
+        type: string
+    type: object
+  movieservice.AddMovieRes:
+    properties:
+      message:
+        type: string
+    type: object
+  movieservice.DeleteMovieReq:
+    properties:
+      id:
+        type: string
+    type: object
+  movieservice.DeleteMovieRes:
+    properties:
+      success:
+        type: boolean
+    type: object
+  movieservice.Genres:
+    properties:
+      genre:
+        type: string
+    type: object
+  movieservice.GetAllMoviesRes:
+    properties:
+      movies:
+        items:
+          $ref: '#/definitions/movieservice.GetMovieByIdRes'
+        type: array
+      total_count:
+        type: integer
+    type: object
+  movieservice.GetMovieByIdRes:
+    properties:
+      age_limit:
+        type: integer
+      background_image_url:
+        type: string
+      bio:
+        type: string
+      created_at:
+        type: string
+      genres:
+        items:
+          $ref: '#/definitions/movieservice.Genres'
+        type: array
+      id:
+        type: string
+      language:
+        type: string
+      movie_name:
+        type: string
+      movie_url:
+        type: string
+      studio:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  movieservice.UpdateMovieReq:
+    properties:
+      age_limit:
+        type: integer
+      background_image_url:
+        type: string
+      bio:
+        type: string
+      genres:
+        items:
+          $ref: '#/definitions/movieservice.Genres'
+        type: array
+      id:
+        type: string
+      language:
+        type: string
+      movie_name:
+        type: string
+      movie_url:
+        type: string
+      season:
+        type: integer
+      studio:
+        type: string
+    type: object
+  movieservice.UpdateMovieRes:
+    properties:
+      success:
+        type: boolean
+    type: object
+info:
+  contact: {}
+  description: Betayin Kino
+  version: "1.0"
+paths:
+  /movie/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves details of a movie by its ID
+      parameters:
+      - description: Movie ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/movieservice.GetMovieByIdRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get movie details by ID
+      tags:
+      - movie
+  /movie/add:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new movie with the provided details
+      parameters:
+      - description: Movie Add Request
+        in: body
+        name: addMovieReq
+        required: true
+        schema:
+          $ref: '#/definitions/movieservice.AddMovieReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/movieservice.AddMovieRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Add a new movie
+      tags:
+      - movie
+  /movie/all:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of all movies with optional filters
+      parameters:
+      - description: Filter by movie name
+        in: query
+        name: name
+        type: string
+      - description: Filter by studio
+        in: query
+        name: studio
+        type: string
+      - description: Filter by genre
+        in: query
+        name: genre
+        type: string
+      - description: Limit the number of results
+        in: query
+        name: limit
+        type: integer
+      - description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved list of movies
+          schema:
+            $ref: '#/definitions/movieservice.GetAllMoviesRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get all movies
+      tags:
+      - movie
+  /movie/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a movie by its ID
+      parameters:
+      - description: Movie Delete Request
+        in: body
+        name: deleteMovieReq
+        required: true
+        schema:
+          $ref: '#/definitions/movieservice.DeleteMovieReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/movieservice.DeleteMovieRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete a movie
+      tags:
+      - movie
+  /movie/update:
+    put:
+      consumes:
+      - application/json
+      description: Updates the details of a movie by its ID
+      parameters:
+      - description: Movie Update Request
+        in: body
+        name: updateMovieReq
+        required: true
+        schema:
+          $ref: '#/definitions/movieservice.UpdateMovieReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/movieservice.UpdateMovieRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update movie details
+      tags:
+      - movie
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authourization
+    type: apiKey
+swagger: "2.0"

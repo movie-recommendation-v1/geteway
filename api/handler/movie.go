@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/movie-recommendation-v1/geteway/genproto/movieservice"
 	pbMovie "github.com/movie-recommendation-v1/geteway/genproto/movieservice"
 	logger "github.com/movie-recommendation-v1/geteway/logger"
 	"go.uber.org/zap"
@@ -17,8 +18,8 @@ import (
 // @Tags movie
 // @Accept json
 // @Produce json
-// @Param addMovieReq body pbMovie.AddMovieReq true "Movie Add Request"
-// @Success 200 {object} pbMovie.AddMovieRes "Success Response"
+// @Param addMovieReq body movieservice.AddMovieReq true "Movie Add Request"
+// @Success 200 {object} movieservice.AddMovieRes "Success Response"
 // @Failure 400 {object} string "Bad Request"
 // @Failure 500 {object} string "Internal Server Error"
 // @Router /movie/add [post]
@@ -29,7 +30,7 @@ func (h *Handler) AddMovie(c *gin.Context) {
 		return
 	}
 
-	req := pbMovie.AddMovieReq{}
+	req := movieservice.AddMovieReq{}
 	if err := c.BindJSON(&req); err != nil {
 		log.Error("BindJSON error", zap.Error(err))
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -54,7 +55,7 @@ func (h *Handler) AddMovie(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path string true "Movie ID"
-// @Success 200 {object} pbMovie.GetMovieByIdRes "Success Response"
+// @Success 200 {object} movieservice.GetMovieByIdRes "Success Response"
 // @Failure 400 {object} string "Bad Request"
 // @Failure 500 {object} string "Internal Server Error"
 // @Router /movie/{id} [get]
@@ -85,8 +86,8 @@ func (h *Handler) GetMovieById(c *gin.Context) {
 // @Tags movie
 // @Accept json
 // @Produce json
-// @Param updateMovieReq body pbMovie.UpdateMovieReq true "Movie Update Request"
-// @Success 200 {object} pbMovie.UpdateMovieRes "Success Response"
+// @Param updateMovieReq body movieservice.UpdateMovieReq true "Movie Update Request"
+// @Success 200 {object} movieservice.UpdateMovieRes "Success Response"
 // @Failure 400 {object} string "Bad Request"
 // @Failure 500 {object} string "Internal Server Error"
 // @Router /movie/update [put]
@@ -122,8 +123,8 @@ func (h *Handler) UpdateMovie(c *gin.Context) {
 // @Tags movie
 // @Accept json
 // @Produce json
-// @Param deleteMovieReq body pbMovie.DeleteMovieReq true "Movie Delete Request"
-// @Success 200 {object} pbMovie.DeleteMovieRes "Success Response"
+// @Param deleteMovieReq body movieservice.DeleteMovieReq true "Movie Delete Request"
+// @Success 200 {object} movieservice.DeleteMovieRes "Success Response"
 // @Failure 400 {object} string "Bad Request"
 // @Failure 500 {object} string "Internal Server Error"
 // @Router /movie/delete [delete]
@@ -163,7 +164,8 @@ func (h *Handler) DeleteMovie(c *gin.Context) {
 // @Param genre query string false "Filter by genre"
 // @Param limit query int false "Limit the number of results"
 // @Param offset query int false "Offset for pagination"
-// @Success 200 {object} pbMovie.GetAllMoviesRes "Successfully retrieved list of movies"
+// @Success 200 {object} movieservice.GetAllMoviesRes "Successfully retrieved list of movies"
+// @Failure 400 {object} string "Bad Request"
 // @Failure 500 {object} string "Internal Server Error"
 // @Router /movie/all [get]
 func (h *Handler) GetAllMovies(c *gin.Context) {
