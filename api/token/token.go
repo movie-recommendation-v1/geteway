@@ -1,13 +1,16 @@
 package token
 
 import (
+	"fmt"
 	"github.com/golang-jwt/jwt"
 	"github.com/movie-recommendation-v1/geteway/api/config"
+	pb "github.com/movie-recommendation-v1/geteway/genproto/userservice"
 	"github.com/spf13/cast"
 	"log"
 	"log/slog"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type JWTHandler struct {
@@ -19,11 +22,11 @@ type JWTHandler struct {
 	Token      string
 }
 
-type Tokens struct {
-	AccessToken string
-
-	RefreshToken string
-}
+//type Tokens struct {
+//	AccessToken string
+//
+//	RefreshToken string
+//}
 
 func ValidateToken(tokenStr string) (bool, error) {
 	log.Println("token from heaf=der ", tokenStr)
@@ -123,4 +126,49 @@ func GetIdFromToken(r *http.Request) (string, int) {
 
 	return cast.ToString(claims["username"]), 0
 
+}
+
+type Tokens struct {
+	AccessToken  string
+	Time         string
+	RefreshToken string
+}
+
+func GenereteJWTTokenForUser(user *pb.LoginRes) *Tokens {
+	accessToken := jwt.New(jwt.SigningMethodHS256)
+	refreshToken := jwt.New(jwt.SigningMethodHS256)
+	cfg := config.Load()
+	exp := time.Now().Add(60 * time.Minute)
+
+	claims := accessToken.Claims.(jwt.MapClaims)
+	claims["name"] = user.UserRes.Name
+	claims["lastname"] = user.UserRes.Lastname
+	claims["email"] = user.UserRes.Email
+	claims["role"] = user.UserRes.Role
+	claims["user_id"] = user.UserRes.Id
+	claims["iat"] = time.Now().Unix()
+	claims["exp"] = exp.Unix()
+	access, err := accessToken.SignedString([]byte(cfg.TOKENKEY))
+	if err != nil {
+		fmt.Println("error while genereting access token : ", err)
+	}
+
+	rftclaims := refreshToken.Claims.(jwt.MapClaims)
+	claims["name"] = user.UserRes.Name
+	claims["lastname"] = user.UserRes.Lastname
+	claims["email"] = user.UserRes.Email
+	claims["role"] = user.UserRes.Role
+	claims["user_id"] = user.UserRes.Id
+	rftclaims["iat"] = time.Now().Unix()
+	rftclaims["exp"] = time.Now().Add(24 * time.Hour).Unix()
+	refresh, err := refreshToken.SignedString([]byte(cfg.TOKENKEY))
+	if err != nil {
+		fmt.Println("error while genereting refresh token : ", err)
+	}
+	t := fmt.Sprint(exp)
+	return &Tokens{
+		AccessToken:  access,
+		Time:         t[:19],
+		RefreshToken: refresh,
+	}
 }

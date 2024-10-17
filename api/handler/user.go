@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	token2 "github.com/movie-recommendation-v1/geteway/api/token"
 	_ "github.com/movie-recommendation-v1/geteway/genproto/userservice"
 	pbUser "github.com/movie-recommendation-v1/geteway/genproto/userservice"
 	logger "github.com/movie-recommendation-v1/geteway/logger"
@@ -80,9 +81,9 @@ func (h *Handler) LoginUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
+	token := token2.GenereteJWTTokenForUser(res)
 	log.Info("User logged in successfully", zap.String("user_id", res.UserRes.Id))
-	c.JSON(http.StatusOK, res)
+	c.JSON(http.StatusOK, gin.H{"User": res.UserRes, "Token": token})
 }
 
 // ForgotPassword godoc
@@ -117,7 +118,7 @@ func (h *Handler) ForgotPassword(c *gin.Context) {
 		return
 	}
 
-	log.Info("Forgot password email sent successfully", zap.String("message", res.Mesage))
+	log.Info("Forgot password email sent successfully", zap.String("message", res.Message))
 	c.JSON(http.StatusOK, res)
 }
 
