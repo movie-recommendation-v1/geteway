@@ -7,6 +7,7 @@ import (
 
 type Handler struct {
 	User    pbUserService.UserServiceClient
+	Admin   pbUserService.AdminServiceClient
 	Movie   pbMovieService.MovieServiceClient
 	Comment pbMovieService.CommentsServiceClient
 	pbMovieService.UnimplementedMovieServiceServer
@@ -18,7 +19,6 @@ type Handler struct {
 func NewHandler(h *Handler) *Handler {
 	return &Handler{
 		User:  h.User,
-		Movie:   h.Movie,
-		Comment: h.Comment,
+		Movie: h.Movie,
 	}
 }

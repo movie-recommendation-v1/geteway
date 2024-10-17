@@ -6,12 +6,14 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/movie-recommendation-v1/geteway/genproto/movieservice"
 	pbComment "github.com/movie-recommendation-v1/geteway/genproto/movieservice"
 	logger "github.com/movie-recommendation-v1/geteway/logger"
 	"go.uber.org/zap"
 )
 
-// CreateComment @Summary Add a new comment
+// CreateComment godoc
+// @Summary Add a new comment
 // @Description Adds a new comment with the provided details
 // @Tags comment
 // @Accept json
@@ -151,7 +153,8 @@ func (h *Handler) DeleteComment(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-// GetAllComments @Summary Get all comments
+// GetAllComments godoc
+// @Summary Get all comments
 // @Description Retrieves a list of all comments with optional filters
 // @Tags comment
 // @Accept json
@@ -159,6 +162,8 @@ func (h *Handler) DeleteComment(c *gin.Context) {
 // @Param user_id query string false "Filter by user ID"
 // @Param movie_id query string false "Filter by movie ID"
 // @Param rate query int false "Filter by rating"
+// @Param limit query int false "Limit the number of results"
+// @Param offset query int false "Offset for pagination"
 // @Success 200 {object} movieservice.GetAllCommentsRes "Successfully retrieved list of comments"
 // @Failure 400 {object} string "Bad Request"
 // @Failure 500 {object} string "Internal Server Error"
@@ -166,11 +171,10 @@ func (h *Handler) DeleteComment(c *gin.Context) {
 func (h *Handler) GetAllComments(c *gin.Context) {
 	log, err := logger.NewLogger()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Error with logger"})
+		c.JSON(400, gin.H{"error": "Error with logger"})
 		return
 	}
 
-	// Prepare request with optional filters
 	req := pbComment.GetAllCommentsReq{
 		UserId:  c.Query("user_id"),
 		MovieId: c.Query("movie_id"),
