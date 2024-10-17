@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/movie-recommendation-v1/geteway/genproto/movieservice"
+	_ "github.com/movie-recommendation-v1/geteway/genproto/movieservice"
 	pbComment "github.com/movie-recommendation-v1/geteway/genproto/movieservice"
 	logger "github.com/movie-recommendation-v1/geteway/logger"
 	"go.uber.org/zap"
@@ -18,8 +18,8 @@ import (
 // @Tags comment
 // @Accept json
 // @Produce json
-// @Param createCommentReq body commentsservice.CreateCommentReq true "Comment Add Request"
-// @Success 200 {object} commentsservice.CreateCommentRes "Success Response"
+// @Param createCommentReq body movieservice.CreateCommentReq true "Comment Add Request"
+// @Success 200 {object} movieservice.CreateCommentRes "Success Response"
 // @Failure 400 {object} string "Bad Request"
 // @Failure 500 {object} string "Internal Server Error"
 // @Router /comment/add [post]
@@ -30,7 +30,7 @@ func (h *Handler) CreateComment(c *gin.Context) {
 		return
 	}
 
-	req := commentsservice.CreateCommentReq{}
+	req := pbComment.CreateCommentReq{}
 	if err := c.BindJSON(&req); err != nil {
 		log.Error("BindJSON error", zap.Error(err))
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -55,7 +55,7 @@ func (h *Handler) CreateComment(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path string true "Comment ID"
-// @Success 200 {object} commentsservice.GetCommentRes "Success Response"
+// @Success 200 {object} movieservice.GetCommentRes "Success Response"
 // @Failure 400 {object} string "Bad Request"
 // @Failure 500 {object} string "Internal Server Error"
 // @Router /comment/{id} [get]
@@ -69,7 +69,7 @@ func (h *Handler) GetComment(c *gin.Context) {
 	id := c.Param("id")
 	req := pbComment.GetCommentReq{Id: id}
 
-	res, err := h.Movie.GetComment(context.Background(), &req)
+	res, err := h.Comment.GetComment(context.Background(), &req)
 	if err != nil {
 		log.Error("GetComment error", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -86,8 +86,8 @@ func (h *Handler) GetComment(c *gin.Context) {
 // @Tags comment
 // @Accept json
 // @Produce json
-// @Param updateCommentReq body commentsservice.UpdateCommentReq true "Comment Update Request"
-// @Success 200 {object} commentsservice.UpdateCommentRes "Success Response"
+// @Param updateCommentReq body movieservice.UpdateCommentReq true "Comment Update Request"
+// @Success 200 {object} movieservice.UpdateCommentRes "Success Response"
 // @Failure 400 {object} string "Bad Request"
 // @Failure 500 {object} string "Internal Server Error"
 // @Router /comment/update [put]
@@ -123,8 +123,8 @@ func (h *Handler) UpdateComment(c *gin.Context) {
 // @Tags comment
 // @Accept json
 // @Produce json
-// @Param deleteCommentReq body commentsservice.DeleteCommentReq true "Comment Delete Request"
-// @Success 200 {object} commentsservice.DeleteCommentRes "Success Response"
+// @Param deleteCommentReq body movieservice.DeleteCommentReq true "Comment Delete Request"
+// @Success 200 {object} movieservice.DeleteCommentRes "Success Response"
 // @Failure 400 {object} string "Bad Request"
 // @Failure 500 {object} string "Internal Server Error"
 // @Router /comment/delete [delete]
@@ -164,7 +164,7 @@ func (h *Handler) DeleteComment(c *gin.Context) {
 // @Param rate query int false "Filter by rating"
 // @Param limit query int false "Limit the number of results"
 // @Param offset query int false "Offset for pagination"
-// @Success 200 {object} commentsservice.GetAllCommentsRes "Successfully retrieved list of comments"
+// @Success 200 {object} movieservice.GetAllCommentsRes "Successfully retrieved list of comments"
 // @Failure 400 {object} string "Bad Request"
 // @Failure 500 {object} string "Internal Server Error"
 // @Router /comment/all [get]
@@ -175,32 +175,13 @@ func (h *Handler) GetAllComments(c *gin.Context) {
 		return
 	}
 
-	// Convert query parameters
-	limitStr := c.DefaultQuery("limit", "10")
-	offsetStr := c.DefaultQuery("offset", "0")
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil {
-		log.Error("Invalid limit parameter", zap.Error(err))
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid limit parameter"})
-		return
-	}
-	offset, err := strconv.Atoi(offsetStr)
-	if err != nil {
-		log.Error("Invalid offset parameter", zap.Error(err))
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid offset parameter"})
-		return
-	}
-
-	// Prepare request with optional filters
-	req := pbComment.{
-		UserId:     c.Query("user_id"),
-		MovieId:    c.Query("movie_id"),
-		Rate:       int32(func() int {
+	req := pbComment.GetAllCommentsReq{
+		UserId:  c.Query("user_id"),
+		MovieId: c.Query("movie_id"),
+		Rate: int32(func() int {
 			r, _ := strconv.Atoi(c.Query("rate"))
 			return r
 		}()),
-		Limit:      int32(limit),
-		Offset:     int32(offset),
 	}
 
 	// Call the service

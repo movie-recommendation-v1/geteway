@@ -28,6 +28,51 @@ definitions:
       message:
         type: string
     type: object
+  movieservice.CommentModel:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: integer
+      description:
+        type: string
+      id:
+        type: string
+      movie_id:
+        type: string
+      rate:
+        type: integer
+      updated_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  movieservice.CreateCommentReq:
+    properties:
+      description:
+        type: string
+      movie_id:
+        type: string
+      rate:
+        type: integer
+      user_id:
+        type: string
+    type: object
+  movieservice.CreateCommentRes:
+    properties:
+      comment:
+        $ref: '#/definitions/movieservice.CommentModel'
+    type: object
+  movieservice.DeleteCommentReq:
+    properties:
+      id:
+        type: string
+    type: object
+  movieservice.DeleteCommentRes:
+    properties:
+      success:
+        type: boolean
+    type: object
   movieservice.DeleteMovieReq:
     properties:
       id:
@@ -43,6 +88,13 @@ definitions:
       genre:
         type: string
     type: object
+  movieservice.GetAllCommentsRes:
+    properties:
+      comments:
+        items:
+          $ref: '#/definitions/movieservice.CommentModel'
+        type: array
+    type: object
   movieservice.GetAllMoviesRes:
     properties:
       movies:
@@ -51,6 +103,11 @@ definitions:
         type: array
       total_count:
         type: integer
+    type: object
+  movieservice.GetCommentRes:
+    properties:
+      comment:
+        $ref: '#/definitions/movieservice.CommentModel'
     type: object
   movieservice.GetMovieByIdRes:
     properties:
@@ -78,6 +135,20 @@ definitions:
         type: string
       updated_at:
         type: string
+    type: object
+  movieservice.UpdateCommentReq:
+    properties:
+      description:
+        type: string
+      id:
+        type: string
+      rate:
+        type: integer
+    type: object
+  movieservice.UpdateCommentRes:
+    properties:
+      comment:
+        $ref: '#/definitions/movieservice.CommentModel'
     type: object
   movieservice.UpdateMovieReq:
     properties:
@@ -109,11 +180,513 @@ definitions:
       success:
         type: boolean
     type: object
+  userservice.AdminModel:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      lastname:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  userservice.CreateAdminReq:
+    properties:
+      admin_email:
+        type: string
+      admin_name:
+        type: string
+      admin_password:
+        type: string
+    type: object
+  userservice.CreateAdminRes:
+    properties:
+      message:
+        type: string
+    type: object
+  userservice.DeleteAdminReq:
+    properties:
+      admin_id:
+        type: string
+    type: object
+  userservice.DeleteAdminRes:
+    properties:
+      message:
+        type: string
+    type: object
+  userservice.DeleteUserReq:
+    properties:
+      id:
+        type: string
+    type: object
+  userservice.DeleteUserRes:
+    properties:
+      message:
+        type: string
+    type: object
+  userservice.ForgetPasswordReq:
+    properties:
+      admin_email:
+        type: string
+    type: object
+  userservice.ForgetPasswordRes:
+    properties:
+      message:
+        type: string
+    type: object
+  userservice.ForgotPasswordReq:
+    properties:
+      email:
+        type: string
+    type: object
+  userservice.ForgotPasswordRes:
+    properties:
+      mesage:
+        type: string
+    type: object
+  userservice.GetAdminRes:
+    properties:
+      admin_res:
+        $ref: '#/definitions/userservice.AdminModel'
+    type: object
+  userservice.GetAllAdminRes:
+    properties:
+      admin_res:
+        items:
+          $ref: '#/definitions/userservice.AdminModel'
+        type: array
+    type: object
+  userservice.GetAllUserRes:
+    properties:
+      UserRes:
+        items:
+          $ref: '#/definitions/userservice.UserModel'
+        type: array
+    type: object
+  userservice.GetUserByIDRes:
+    properties:
+      UserRes:
+        $ref: '#/definitions/userservice.UserModel'
+    type: object
+  userservice.LoginReq:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  userservice.LoginRes:
+    properties:
+      UserRes:
+        $ref: '#/definitions/userservice.UserModel'
+    type: object
+  userservice.RegisterUserReq:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  userservice.RegisterUserRes:
+    properties:
+      UserRes:
+        $ref: '#/definitions/userservice.UserModel'
+    type: object
+  userservice.UpdateAdminReq:
+    properties:
+      admin_req:
+        $ref: '#/definitions/userservice.AdminModel'
+    type: object
+  userservice.UpdateAdminRes:
+    properties:
+      admin_res:
+        $ref: '#/definitions/userservice.AdminModel'
+    type: object
+  userservice.UpdateUserReq:
+    properties:
+      UserReq:
+        $ref: '#/definitions/userservice.UserModel'
+    type: object
+  userservice.UpdateUserRes:
+    properties:
+      UserRes:
+        $ref: '#/definitions/userservice.UserModel'
+    type: object
+  userservice.UserModel:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      lastname:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      updated_at:
+        type: string
+    type: object
 info:
   contact: {}
   description: Betayin Kino
   version: "1.0"
 paths:
+  /admin/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves details of an admin by its ID
+      parameters:
+      - description: Admin ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/userservice.GetAdminRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get admin details by ID
+      tags:
+      - admin
+  /admin/add:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new admin with the provided details
+      parameters:
+      - description: Admin Add Request
+        in: body
+        name: createAdminReq
+        required: true
+        schema:
+          $ref: '#/definitions/userservice.CreateAdminReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/userservice.CreateAdminRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Add a new admin
+      tags:
+      - admin
+  /admin/all:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of all admins with optional filters
+      parameters:
+      - description: Limit the number of results
+        in: query
+        name: limit
+        type: integer
+      - description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved list of admins
+          schema:
+            $ref: '#/definitions/userservice.GetAllAdminRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get all admins
+      tags:
+      - admin
+  /admin/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes an admin by its ID
+      parameters:
+      - description: Admin Delete Request
+        in: body
+        name: deleteAdminReq
+        required: true
+        schema:
+          $ref: '#/definitions/userservice.DeleteAdminReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/userservice.DeleteAdminRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete an admin
+      tags:
+      - admin
+  /admin/forget_password:
+    post:
+      consumes:
+      - application/json
+      description: Sends a password reset link to the admin's email
+      parameters:
+      - description: Password Reset Request
+        in: body
+        name: forgetPasswordReq
+        required: true
+        schema:
+          $ref: '#/definitions/userservice.ForgetPasswordReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/userservice.ForgetPasswordRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Reset admin password
+      tags:
+      - admin
+  /admin/update:
+    put:
+      consumes:
+      - application/json
+      description: Updates the details of an admin by its ID
+      parameters:
+      - description: Admin Update Request
+        in: body
+        name: updateAdminReq
+        required: true
+        schema:
+          $ref: '#/definitions/userservice.UpdateAdminReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/userservice.UpdateAdminRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update admin details
+      tags:
+      - admin
+  /comment/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves details of a comment by its ID
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/movieservice.GetCommentRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get comment details by ID
+      tags:
+      - comment
+  /comment/add:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new comment with the provided details
+      parameters:
+      - description: Comment Add Request
+        in: body
+        name: createCommentReq
+        required: true
+        schema:
+          $ref: '#/definitions/movieservice.CreateCommentReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/movieservice.CreateCommentRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Add a new comment
+      tags:
+      - comment
+  /comment/all:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of all comments with optional filters
+      parameters:
+      - description: Filter by user ID
+        in: query
+        name: user_id
+        type: string
+      - description: Filter by movie ID
+        in: query
+        name: movie_id
+        type: string
+      - description: Filter by rating
+        in: query
+        name: rate
+        type: integer
+      - description: Limit the number of results
+        in: query
+        name: limit
+        type: integer
+      - description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved list of comments
+          schema:
+            $ref: '#/definitions/movieservice.GetAllCommentsRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get all comments
+      tags:
+      - comment
+  /comment/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a comment by its ID
+      parameters:
+      - description: Comment Delete Request
+        in: body
+        name: deleteCommentReq
+        required: true
+        schema:
+          $ref: '#/definitions/movieservice.DeleteCommentReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/movieservice.DeleteCommentRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete a comment
+      tags:
+      - comment
+  /comment/update:
+    put:
+      consumes:
+      - application/json
+      description: Updates the details of a comment by its ID
+      parameters:
+      - description: Comment Update Request
+        in: body
+        name: updateCommentReq
+        required: true
+        schema:
+          $ref: '#/definitions/movieservice.UpdateCommentReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/movieservice.UpdateCommentRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update comment details
+      tags:
+      - comment
   /movie/{id}:
     get:
       consumes:
@@ -277,6 +850,217 @@ paths:
       summary: Update movie details
       tags:
       - movie
+  /user/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves details of a user by their ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/userservice.GetUserByIDRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get user details by ID
+      tags:
+      - user
+  /user/all:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of all users with optional filters
+      parameters:
+      - description: Limit the number of results
+        in: query
+        name: limit
+        type: integer
+      - description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved list of users
+          schema:
+            $ref: '#/definitions/userservice.GetAllUserRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get all users
+      tags:
+      - user
+  /user/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a user by their ID
+      parameters:
+      - description: User Delete Request
+        in: body
+        name: deleteUserReq
+        required: true
+        schema:
+          $ref: '#/definitions/userservice.DeleteUserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/userservice.DeleteUserRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete a user
+      tags:
+      - user
+  /user/forgot_password:
+    post:
+      consumes:
+      - application/json
+      description: Sends a forgot password email
+      parameters:
+      - description: Forgot Password Request
+        in: body
+        name: forgotPasswordReq
+        required: true
+        schema:
+          $ref: '#/definitions/userservice.ForgotPasswordReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/userservice.ForgotPasswordRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Forgot password
+      tags:
+      - user
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: Logins user using email and password
+      parameters:
+      - description: Login Request
+        in: body
+        name: loginReq
+        required: true
+        schema:
+          $ref: '#/definitions/userservice.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/userservice.LoginRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Login user
+      tags:
+      - user
+  /user/register:
+    post:
+      consumes:
+      - application/json
+      description: Registers a new user with the provided details
+      parameters:
+      - description: User Register Request
+        in: body
+        name: registerUserReq
+        required: true
+        schema:
+          $ref: '#/definitions/userservice.RegisterUserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/userservice.RegisterUserRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Register a new user
+      tags:
+      - user
+  /user/update:
+    put:
+      consumes:
+      - application/json
+      description: Updates the details of a user by their ID
+      parameters:
+      - description: User Update Request
+        in: body
+        name: updateUserReq
+        required: true
+        schema:
+          $ref: '#/definitions/userservice.UpdateUserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/userservice.UpdateUserRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update user details
+      tags:
+      - user
 securityDefinitions:
   BearerAuth:
     in: header

@@ -6,8 +6,10 @@ import (
 )
 
 type Handler struct {
-	User  pbUserService.UserServiceClient
-	Movie pbMovieService.MovieServiceClient
+	User    pbUserService.UserServiceClient
+	Admin   pbUserService.AdminServiceClient
+	Movie   pbMovieService.MovieServiceClient
+	Comment pbMovieService.CommentsServiceClient
 	pbMovieService.UnimplementedMovieServiceServer
 	pbMovieService.UnimplementedCommentsServiceServer
 	pbUserService.UnimplementedUserServiceServer
