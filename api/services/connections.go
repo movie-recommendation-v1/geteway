@@ -9,8 +9,10 @@ import (
 )
 
 type Clients struct {
-	MovieClient *grpc.ClientConn
-	AdminClient *grpc.ClientConn
+	MovieClient   *grpc.ClientConn
+	AdminClient   *grpc.ClientConn
+	UserClient    *grpc.ClientConn
+	CommentClient *grpc.ClientConn
 }
 
 func ClientConn() *Clients {
@@ -21,13 +23,15 @@ func ClientConn() *Clients {
 		log.Fatal("Error while connecting to book", err)
 		return nil
 	}
-	Admin, err := grpc.NewClient(fmt.Sprintf("%s:%d", cfg.ADMINSERVICEHOST, cfg.ADMINSERVICEPORT), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	Auth, err := grpc.NewClient("localhost:8081", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal("Error while connecting to book", err)
 		return nil
 	}
 	return &Clients{
-		MovieClient: Movie,
-		AdminClient: Admin,
+		MovieClient:   Movie,
+		AdminClient:   Auth,
+		UserClient:    Auth,
+		CommentClient: Movie,
 	}
 }

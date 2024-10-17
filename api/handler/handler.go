@@ -10,10 +10,6 @@ type Handler struct {
 	Admin   pbUserService.AdminServiceClient
 	Movie   pbMovieService.MovieServiceClient
 	Comment pbMovieService.CommentsServiceClient
-	pbMovieService.UnimplementedMovieServiceServer
-	pbMovieService.UnimplementedCommentsServiceServer
-	pbUserService.UnimplementedUserServiceServer
-	pbUserService.UnimplementedAdminServiceServer
 }
 
 func NewHandler(h *Handler) *Handler {

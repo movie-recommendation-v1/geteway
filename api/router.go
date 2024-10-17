@@ -4,7 +4,6 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/movie-recommendation-v1/geteway/api/handler"
-	middlerware "github.com/movie-recommendation-v1/geteway/api/middleware"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"time"
@@ -22,7 +21,7 @@ func Router(Clients *handler.Handler) *gin.Engine {
 	url := ginSwagger.URL("swagger/doc.json")
 
 	router.GET("api/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
-	router.Use(middlerware.Middleware(router))
+	//router.Use(middlerware.Middleware(router))
 	h := handler.NewHandler(Clients)
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"}, //df
@@ -43,6 +42,7 @@ func Router(Clients *handler.Handler) *gin.Engine {
 	userGroup := router.Group("/user")
 	{
 		userGroup.POST("/register", h.RegisterUser)
+		userGroup.POST("/login", h.LoginUser)
 	}
 	return router
 }

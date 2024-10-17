@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/movie-recommendation-v1/geteway/genproto/userservice"
 	pbUser "github.com/movie-recommendation-v1/geteway/genproto/userservice"
@@ -30,6 +31,7 @@ func (h *Handler) RegisterUser(c *gin.Context) {
 	}
 
 	req := pbUser.RegisterUserReq{}
+	fmt.Println(h.User)
 	if err := c.BindJSON(&req); err != nil {
 		log.Error("BindJSON error", zap.Error(err))
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
