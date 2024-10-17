@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/movie-recommendation-v1/geteway/genproto/movieservice"
 	pbMovie "github.com/movie-recommendation-v1/geteway/genproto/movieservice"
 	logger "github.com/movie-recommendation-v1/geteway/logger"
 	"go.uber.org/zap"
@@ -30,7 +29,7 @@ func (h *Handler) AddMovie(c *gin.Context) {
 		return
 	}
 
-	req := movieservice.AddMovieReq{}
+	req := pbMovie.AddMovieReq{}
 	if err := c.BindJSON(&req); err != nil {
 		log.Error("BindJSON error", zap.Error(err))
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

@@ -1,44 +1,53 @@
 package api
 
 import (
+	"time"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	_ "github.com/movie-recommendation-v1/geteway/api/docs"
 	"github.com/movie-recommendation-v1/geteway/api/handler"
-	middlerware "github.com/movie-recommendation-v1/geteway/api/middleware"
+	middleware "github.com/movie-recommendation-v1/geteway/api/middleware"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"time"
 )
 
-// @tite geteway service
+// Router @title Gateway Service
 // @version 1.0
-// @description Betayin Kino
+// @description Betayin Kino API Documentation
 // @BasePath /
 // @securityDefinitions.apikey BearerAuth
 // @in header
-// @name Authourization
-func Router(Clients *handler.Handler) *gin.Engine {
+// @name Authorization
+func Router(clients *handler.Handler) *gin.Engine {
 	router := gin.Default()
-	url := ginSwagger.URL("swagger/doc.json")
 
-	router.GET("api/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
-	router.Use(middlerware.Middleware(router))
-	h := handler.NewHandler(Clients)
+	// Configure CORS
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"}, //df
+		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		MaxAge:           24 * time.Hour,
 	}))
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{"message": "pong"})
+	})
+	// Apply custom middleware
+	router.Use(middleware.Middleware(router))
+
+	// Set up routes for movies
 	movieGroup := router.Group("/movies")
 	{
-		movieGroup.POST("/create", h.AddMovie)
-		movieGroup.PUT("/update", h.UpdateMovie)
-		movieGroup.GET("/:id", h.GetMovieById)
-		movieGroup.GET("/all", h.GetAllMovies)
-		movieGroup.DELETE("/:id", h.DeleteMovie)
+		movieGroup.POST("/create", clients.AddMovie)
+		movieGroup.PUT("/update", clients.UpdateMovie)
+		movieGroup.GET("/:id", clients.GetMovieById)
+		movieGroup.GET("/all", clients.GetAllMovies)
+		movieGroup.DELETE("/:id", clients.DeleteMovie)
 	}
+
 	return router
 }

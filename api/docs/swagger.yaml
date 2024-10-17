@@ -28,6 +28,51 @@ definitions:
       message:
         type: string
     type: object
+  movieservice.CommentModel:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: integer
+      description:
+        type: string
+      id:
+        type: string
+      movie_id:
+        type: string
+      rate:
+        type: integer
+      updated_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  movieservice.CreateCommentReq:
+    properties:
+      description:
+        type: string
+      movie_id:
+        type: string
+      rate:
+        type: integer
+      user_id:
+        type: string
+    type: object
+  movieservice.CreateCommentRes:
+    properties:
+      comment:
+        $ref: '#/definitions/movieservice.CommentModel'
+    type: object
+  movieservice.DeleteCommentReq:
+    properties:
+      id:
+        type: string
+    type: object
+  movieservice.DeleteCommentRes:
+    properties:
+      success:
+        type: boolean
+    type: object
   movieservice.DeleteMovieReq:
     properties:
       id:
@@ -43,6 +88,13 @@ definitions:
       genre:
         type: string
     type: object
+  movieservice.GetAllCommentsRes:
+    properties:
+      comments:
+        items:
+          $ref: '#/definitions/movieservice.CommentModel'
+        type: array
+    type: object
   movieservice.GetAllMoviesRes:
     properties:
       movies:
@@ -51,6 +103,11 @@ definitions:
         type: array
       total_count:
         type: integer
+    type: object
+  movieservice.GetCommentRes:
+    properties:
+      comment:
+        $ref: '#/definitions/movieservice.CommentModel'
     type: object
   movieservice.GetMovieByIdRes:
     properties:
@@ -78,6 +135,20 @@ definitions:
         type: string
       updated_at:
         type: string
+    type: object
+  movieservice.UpdateCommentReq:
+    properties:
+      description:
+        type: string
+      id:
+        type: string
+      rate:
+        type: integer
+    type: object
+  movieservice.UpdateCommentRes:
+    properties:
+      comment:
+        $ref: '#/definitions/movieservice.CommentModel'
     type: object
   movieservice.UpdateMovieReq:
     properties:
@@ -111,9 +182,162 @@ definitions:
     type: object
 info:
   contact: {}
-  description: Betayin Kino
+  description: Betayin Kino API Documentation
   version: "1.0"
 paths:
+  /comment/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves details of a comment by its ID
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/movieservice.GetCommentRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get comment details by ID
+      tags:
+      - comment
+  /comment/add:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new comment with the provided details
+      parameters:
+      - description: Comment Add Request
+        in: body
+        name: createCommentReq
+        required: true
+        schema:
+          $ref: '#/definitions/movieservice.CreateCommentReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/movieservice.CreateCommentRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      tags:
+      - comment
+  /comment/all:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of all comments with optional filters
+      parameters:
+      - description: Filter by user ID
+        in: query
+        name: user_id
+        type: string
+      - description: Filter by movie ID
+        in: query
+        name: movie_id
+        type: string
+      - description: Filter by rating
+        in: query
+        name: rate
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved list of comments
+          schema:
+            $ref: '#/definitions/movieservice.GetAllCommentsRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      tags:
+      - comment
+  /comment/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a comment by its ID
+      parameters:
+      - description: Comment Delete Request
+        in: body
+        name: deleteCommentReq
+        required: true
+        schema:
+          $ref: '#/definitions/movieservice.DeleteCommentReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/movieservice.DeleteCommentRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete a comment
+      tags:
+      - comment
+  /comment/update:
+    put:
+      consumes:
+      - application/json
+      description: Updates the details of a comment by its ID
+      parameters:
+      - description: Comment Update Request
+        in: body
+        name: updateCommentReq
+        required: true
+        schema:
+          $ref: '#/definitions/movieservice.UpdateCommentReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/movieservice.UpdateCommentRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update comment details
+      tags:
+      - comment
   /movie/{id}:
     get:
       consumes:
@@ -280,6 +504,6 @@ paths:
 securityDefinitions:
   BearerAuth:
     in: header
-    name: Authourization
+    name: Authorization
     type: apiKey
 swagger: "2.0"
