@@ -33,6 +33,8 @@ type Config struct {
 	AUTHHOST         string
 	GATEWAYHOST      string
 	GATEWAYPORT      int
+	MOVIESEVICEPORT  int
+	MOVIESERVICEHOST string
 }
 
 func Load() Config {
@@ -64,6 +66,8 @@ func Load() Config {
 		BOOKPORT:         cast.ToInt(getEnv("BOOKPORT", 1)),
 		AUTHPORT:         cast.ToInt(getEnv("AUTHPORT", 1)),
 		GATEWAYPORT:      cast.ToInt(getEnv("GATEWAYPORT", 1)),
+		MOVIESEVICEPORT:  cast.ToInt(getEnv("MOVIESEVICEPORT", 1)),
+		MOVIESERVICEHOST: cast.ToString(getEnv("MOVIESERVICEHOST", 1)),
 	}
 
 	return config

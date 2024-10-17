@@ -1,6 +1,7 @@
 package main
 
 import (
+	pbAdmin "github.com/movie-recommendation-v1/geteway/genproto/userservice"
 	"log"
 
 	"github.com/movie-recommendation-v1/geteway/api"
@@ -19,10 +20,12 @@ func main() {
 
 	// Create a new movie service client
 	movieClient := pbMovie.NewMovieServiceClient(conn.MovieClient)
+	adminClient := pbAdmin.NewAdminServiceClient(conn.AdminClient)
 
 	// Set up the router with the necessary handlers
 	router := api.Router(&handler.Handler{
 		Movie: movieClient,
+		Admin: adminClient,
 	})
 
 	// Start the HTTP server on a configurable port
