@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  gateway-service:
+    container_name: gateway-service
+    build: ./
+    ports:
+      - "8085:8085"
+    networks:
+      - global
+
+
+
+networks:
+  global:
+    external: true
+    name: cinema
+    driver: bridge
+
+
+volumes:
+  db:
+  redis-data:

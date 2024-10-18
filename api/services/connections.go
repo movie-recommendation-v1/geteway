@@ -23,7 +23,7 @@ func ClientConn() *Clients {
 		log.Fatal("Error while connecting to book", err)
 		return nil
 	}
-	Auth, err := grpc.NewClient("localhost:8081", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	Auth, err := grpc.NewClient(fmt.Sprintf("%s:%d", cfg.AUTHHOST, cfg.AUTHPORT), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal("Error while connecting to book", err)
 		return nil

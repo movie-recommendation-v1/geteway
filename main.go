@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"github.com/movie-recommendation-v1/geteway/api/config"
 	"github.com/movie-recommendation-v1/geteway/api/handler"
 	pbMovie "github.com/movie-recommendation-v1/geteway/genproto/movieservice"
 	pbAdmin "github.com/movie-recommendation-v1/geteway/genproto/userservice"
@@ -13,7 +15,7 @@ import (
 
 func main() {
 	conn := services.ClientConn()
-
+	cfg := config.Load()
 	//movieClient := pbMovie.NewMovieServiceClient(conn.MovieClient)
 	UserClient := pbAdmin.NewUserServiceClient(conn.UserClient)
 	AdminClient := pbAdmin.NewAdminServiceClient(conn.AdminClient)
@@ -26,9 +28,9 @@ func main() {
 		Movie:   MovieClient,
 		Comment: CommentClient,
 	})
-
-	log.Printf("Starting server on %s", "localhost:8085")
-	err := router.Run(":8085")
+	fmt.Println(cfg.ADMINSERVICEHOST)
+	log.Printf("%s:%d", cfg.ADMINSERVICEHOST, cfg.ADMINSERVICEPORT)
+	err := router.Run(fmt.Sprintf("%s:%d", cfg.ADMINSERVICEHOST, cfg.ADMINSERVICEPORT))
 	if err != nil {
 		log.Fatal(err)
 	}
