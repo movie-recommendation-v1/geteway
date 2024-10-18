@@ -63,6 +63,7 @@ func (h *Handler) RegisterUser(c *gin.Context) {
 // @Router /user/login [post]
 func (h *Handler) LoginUser(c *gin.Context) {
 	log, err := logger.NewLogger()
+
 	if err != nil {
 		c.JSON(400, gin.H{"error": "Error with logger"})
 		return
@@ -74,7 +75,8 @@ func (h *Handler) LoginUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
+	println(req.Email)
+	println(req.Password)
 	res, err := h.User.Login(context.Background(), &req)
 	if err != nil {
 		log.Error("Login error", zap.Error(err))
@@ -179,7 +181,6 @@ func (h *Handler) UpdateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	res, err := h.User.UpdateUser(context.Background(), &req)
 	if err != nil {
 		log.Error("UpdateUser error", zap.Error(err))
