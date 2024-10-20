@@ -20,13 +20,12 @@ mig-force:
 	migrate -database 'postgres://postgres:1234@localhost:5432/yusolve?sslmode=disable' -path migration force 1
 
 # Define paths to swag and swagger documentation output
-SWAGGER := C:\Users\Umar2\go\bin\swag  # Replace with your actual username and path
-SWAGGER_DOCS := ./api/docs
-SWAGGER_INIT := "$(SWAGGER)" init -g ./api/router.go -o $(SWAGGER_DOCS)
+SWAGGER := ~/go/bin/swag
+SWAGGER_DOCS := api/docs
+SWAGGER_INIT := $(SWAGGER) init -g ./api/router.go -o $(SWAGGER_DOCS)
 
 # Target to generate swagger documentation
 swag-gen:
 	$(SWAGGER_INIT)
-
 run:
 	go run cmd/main.go

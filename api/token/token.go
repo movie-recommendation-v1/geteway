@@ -142,7 +142,6 @@ func GenereteJWTTokenForUser(user *pb.LoginRes) *Tokens {
 
 	claims := accessToken.Claims.(jwt.MapClaims)
 	claims["name"] = user.UserRes.Name
-	claims["lastname"] = user.UserRes.Lastname
 	claims["email"] = user.UserRes.Email
 	claims["role"] = user.UserRes.Role
 	claims["user_id"] = user.UserRes.Id
@@ -155,7 +154,6 @@ func GenereteJWTTokenForUser(user *pb.LoginRes) *Tokens {
 
 	rftclaims := refreshToken.Claims.(jwt.MapClaims)
 	claims["name"] = user.UserRes.Name
-	claims["lastname"] = user.UserRes.Lastname
 	claims["email"] = user.UserRes.Email
 	claims["role"] = user.UserRes.Role
 	claims["user_id"] = user.UserRes.Id

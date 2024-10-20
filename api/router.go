@@ -43,6 +43,7 @@ func Router(Clients *handler.Handler) *gin.Engine {
 	{
 		userGroup.POST("/register", h.RegisterUser)
 		userGroup.POST("/login", h.LoginUser)
+		userGroup.POST("/verify-user", h.VerifyUser)
 	}
 	return router
 }

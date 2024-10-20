@@ -13,7 +13,7 @@ import (
 	"strconv"
 )
 
-// RegisterUser godoc
+// Regist	erUser godoc
 // @Summary Register a new user
 // @Description Registers a new user with the provided details
 // @Tags user
@@ -30,7 +30,7 @@ func (h *Handler) RegisterUser(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "Error with logger"})
 		return
 	}
-
+	fmt.Println(11111)
 	req := pbUser.RegisterUserReq{}
 	fmt.Println(h.User)
 	if err := c.BindJSON(&req); err != nil {
@@ -45,9 +45,44 @@ func (h *Handler) RegisterUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	fmt.Println(222)
 
-	log.Info("User registered successfully", zap.String("user_id", res.UserRes.Id))
+	log.Info("code sanded in email")
 	c.JSON(http.StatusOK, res)
+}
+
+// VerifyUser godoc
+// @Summary Verify a user
+// @Description Verifies a user using the verification code
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param verifyUserReq body userservice.VerifyUserReq true "User Verification Request"
+// @Success 200 {object} userservice.VerifyUserRes "Success Response"
+// @Failure 400 {object} string "Bad Request"
+// @Failure 500 {object} string "Internal Server Error"
+// @Router /user/verify-user [post]
+func (h *Handler) VerifyUser(c *gin.Context) {
+	log, err := logger.NewLogger()
+	if err != nil {
+		c.JSON(400, gin.H{"error": "Error with logger"})
+		return
+	}
+	req := pbUser.VerifyUserReq{}
+	err = c.BindJSON(&req)
+	if err != nil {
+		log.Error("BindJSON error", zap.Error(err))
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	res, err := h.User.VerifyUser(context.Background(), &req)
+	if err != nil {
+		log.Error("VerifyUser error", zap.Error(err))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	token := token2.GenereteJWTTokenForUser(&pbUser.LoginRes{UserRes: res.Res})
+	c.JSON(http.StatusOK, gin.H{"message": "User successfully verify", "token": token})
 }
 
 // LoginUser godoc

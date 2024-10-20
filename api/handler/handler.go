@@ -14,7 +14,6 @@ type Handler struct {
 
 func NewHandler(h *Handler) *Handler {
 	return &Handler{
-		User:  h.User,
-		Movie: h.Movie,
+		User: h.User,
 	}
 }

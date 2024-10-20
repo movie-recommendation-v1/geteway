@@ -188,11 +188,13 @@ definitions:
         type: string
       id:
         type: string
-      lastname:
+      img_url:
         type: string
       name:
         type: string
       password:
+        type: string
+      role:
         type: string
       updated_at:
         type: string
@@ -248,7 +250,7 @@ definitions:
     type: object
   userservice.ForgotPasswordRes:
     properties:
-      mesage:
+      message:
         type: string
     type: object
   userservice.GetAdminRes:
@@ -329,14 +331,28 @@ definitions:
         type: string
       id:
         type: string
-      lastname:
+      img_url:
         type: string
       name:
         type: string
       password:
         type: string
+      role:
+        type: string
       updated_at:
         type: string
+    type: object
+  userservice.VerifyUserReq:
+    properties:
+      email:
+        type: string
+      sms_code:
+        type: string
+    type: object
+  userservice.VerifyUserRes:
+    properties:
+      Res:
+        $ref: '#/definitions/userservice.UserModel'
     type: object
 info:
   contact: {}
@@ -1059,6 +1075,36 @@ paths:
           schema:
             type: string
       summary: Update user details
+      tags:
+      - user
+  /user/verify-user:
+    post:
+      consumes:
+      - application/json
+      description: Verifies a user using the verification code
+      parameters:
+      - description: User Verification Request
+        in: body
+        name: verifyUserReq
+        required: true
+        schema:
+          $ref: '#/definitions/userservice.VerifyUserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Response
+          schema:
+            $ref: '#/definitions/userservice.VerifyUserRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Verify a user
       tags:
       - user
 securityDefinitions:

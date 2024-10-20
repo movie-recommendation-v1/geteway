@@ -1069,6 +1069,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/verify-user": {
+            "post": {
+                "description": "Verifies a user using the verification code",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Verify a user",
+                "parameters": [
+                    {
+                        "description": "User Verification Request",
+                        "name": "verifyUserReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/userservice.VerifyUserReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "schema": {
+                            "$ref": "#/definitions/userservice.VerifyUserRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/user/{id}": {
             "get": {
                 "description": "Retrieves details of a user by their ID",
@@ -1406,13 +1452,16 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "lastname": {
+                "img_url": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                },
+                "role": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -1501,7 +1550,7 @@ const docTemplate = `{
         "userservice.ForgotPasswordRes": {
             "type": "object",
             "properties": {
-                "mesage": {
+                "message": {
                     "type": "string"
                 }
             }
@@ -1629,7 +1678,7 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "lastname": {
+                "img_url": {
                     "type": "string"
                 },
                 "name": {
@@ -1638,8 +1687,30 @@ const docTemplate = `{
                 "password": {
                     "type": "string"
                 },
+                "role": {
+                    "type": "string"
+                },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "userservice.VerifyUserReq": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "sms_code": {
+                    "type": "string"
+                }
+            }
+        },
+        "userservice.VerifyUserRes": {
+            "type": "object",
+            "properties": {
+                "Res": {
+                    "$ref": "#/definitions/userservice.UserModel"
                 }
             }
         }
