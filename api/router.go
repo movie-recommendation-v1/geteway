@@ -31,14 +31,14 @@ func Router(Clients *handler.Handler) *gin.Engine {
 		AllowCredentials: true,
 		MaxAge:           24 * time.Hour,
 	}))
-	movieGroup := router.Group("/movies")
-	{
-		movieGroup.POST("/create", h.AddMovie)
-		movieGroup.PUT("/update", h.UpdateMovie)
-		movieGroup.GET("/:id", h.GetMovieById)
-		movieGroup.GET("/all", h.GetAllMovies)
-		movieGroup.DELETE("/:id", h.DeleteMovie)
-	}
+	//movieGroup := router.Group("/movies")
+	//{
+	//	movieGroup.POST("/create", h.Add)
+	//	movieGroup.PUT("/update", h.UpdateMovie)
+	//	movieGroup.GET("/:id", h.GetMovieById)
+	//	movieGroup.GET("/all", h.GetAllMovies)
+	//	movieGroup.DELETE("/:id", h.DeleteMovie)
+	//}
 	userGroup := router.Group("/user")
 	{
 		userGroup.POST("/register", h.RegisterUser)
