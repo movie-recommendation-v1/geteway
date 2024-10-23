@@ -44,6 +44,9 @@ func Router(Clients *handler.Handler) *gin.Engine {
 		userGroup.POST("/register", h.RegisterUser)
 		userGroup.POST("/login", h.LoginUser)
 		userGroup.POST("/verify-user", h.VerifyUser)
+		userGroup.GET("/:id", h.GetUserByID)
+		userGroup.GET("/all", h.GetAllUsers)
+		userGroup.PUT("/update", h.UpdateUser)
 	}
 	return router
 }

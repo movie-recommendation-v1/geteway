@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/movie-recommendation-v1/geteway/genproto/userservice"
 	pbAdmin "github.com/movie-recommendation-v1/geteway/genproto/userservice"
-	logger "github.com/movie-recommendation-v1/geteway/logger"
+	logger "github.com/movie-recommendation-v1/geteway/pkg/logger"
 	"go.uber.org/zap"
 )
 
@@ -172,6 +172,7 @@ func (h *Handler) GetAllAdmins(c *gin.Context) {
 	}
 
 	req := pbAdmin.GetAllAdminReq{
+
 		Limit: int32(func() int {
 			l, _ := strconv.Atoi(c.Query("limit"))
 			return l

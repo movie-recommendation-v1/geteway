@@ -3,8 +3,8 @@ package token
 import (
 	"fmt"
 	"github.com/golang-jwt/jwt"
-	"github.com/movie-recommendation-v1/geteway/api/config"
 	pb "github.com/movie-recommendation-v1/geteway/genproto/userservice"
+	"github.com/movie-recommendation-v1/geteway/internal/config"
 	"github.com/spf13/cast"
 	"log"
 	"log/slog"

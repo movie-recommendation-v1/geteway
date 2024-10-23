@@ -7,7 +7,7 @@ import (
 	token2 "github.com/movie-recommendation-v1/geteway/api/token"
 	_ "github.com/movie-recommendation-v1/geteway/genproto/userservice"
 	pbUser "github.com/movie-recommendation-v1/geteway/genproto/userservice"
-	logger "github.com/movie-recommendation-v1/geteway/logger"
+	logger "github.com/movie-recommendation-v1/geteway/pkg/logger"
 	"go.uber.org/zap"
 	"net/http"
 	"strconv"
@@ -271,6 +271,10 @@ func (h *Handler) DeleteUser(c *gin.Context) {
 // @Produce json
 // @Param limit query int false "Limit the number of results"
 // @Param offset query int false "Offset for pagination"
+// @Param id query string false "User id"
+// @Param name query string false "User-name"
+// @Param email query string false "User email"
+// Param img_url query string false "User img-url"
 // @Success 200 {object} userservice.GetAllUserRes "Successfully retrieved list of users"
 // @Failure 400 {object} string "Bad Request"
 // @Failure 500 {object} string "Internal Server Error"
@@ -283,6 +287,12 @@ func (h *Handler) GetAllUsers(c *gin.Context) {
 	}
 
 	req := pbUser.GetAllUserReq{
+		UserReq: &pbUser.UserModel{
+			Id:     c.Query("id"),
+			Name:   c.Query("name"),
+			Email:  c.Query("email"),
+			ImgUrl: c.Query("img_url"),
+		},
 		Limit: int32(func() int {
 			l, _ := strconv.Atoi(c.Query("limit"))
 			return l

@@ -2,7 +2,7 @@ package services
 
 import (
 	"fmt"
-	"github.com/movie-recommendation-v1/geteway/api/config"
+	"github.com/movie-recommendation-v1/geteway/internal/config"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"

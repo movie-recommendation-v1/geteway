@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	"github.com/movie-recommendation-v1/geteway/api"
-	"github.com/movie-recommendation-v1/geteway/api/config"
 	_ "github.com/movie-recommendation-v1/geteway/api/docs"
 	"github.com/movie-recommendation-v1/geteway/api/handler"
 	"github.com/movie-recommendation-v1/geteway/api/services"
 	pbMovie "github.com/movie-recommendation-v1/geteway/genproto/movieservice"
 	pbAdmin "github.com/movie-recommendation-v1/geteway/genproto/userservice"
+	"github.com/movie-recommendation-v1/geteway/internal/config"
 	"log"
 )
 
