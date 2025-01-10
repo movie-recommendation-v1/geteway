@@ -49,7 +49,7 @@ func Middleware(router *gin.Engine) gin.HandlerFunc {
 			strings.Contains(url, "price-plans") || strings.Contains(url, "telegram-message") ||
 			strings.Contains(url, "all") || ctx.Request.Method == http.MethodGet {
 			ctx.Next()
-			return
+			return //JHG
 		}
 
 		if isValid, err := t.ValidateToken(token); !isValid && err != nil {
