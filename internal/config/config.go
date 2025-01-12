@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cast"
 )
 
-// Config holds the configuration valuesjhg
+// Config holds the configuration valuesjh
 type Config struct {
 	DBHOST           string
 	DBPORT           int
